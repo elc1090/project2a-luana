@@ -9,9 +9,16 @@ gitHubForm.addEventListener('submit', (e) => {
 
     // Get the GitHub username input field on the DOM
     let usernameInput = document.getElementById('usernameInput');
+    let repositoryInput = document.getElementById('repositoryInput');
 
     // Get the value of the GitHub username input field
     let gitHubUsername = usernameInput.value;
+    let gitHubRepository = repositoryInput.value;
+
+
+    requestRepositorieCommits(gitHubRepository,gitHubUsername)
+        .then(response => response.json()) // parse response into json
+        .then(data => console.log(data))
 
     // Run GitHub API function, passing in the GitHub username
     requestUserRepos(gitHubUsername)
@@ -49,6 +56,7 @@ gitHubForm.addEventListener('submit', (e) => {
                 <p><strong>Repo:</strong> ${data[i].name}</p>
                 <p><strong>Description:</strong> ${data[i].description}</p>
                 <p><strong>URL:</strong> <a href="${data[i].html_url}">${data[i].html_url}</a></p>
+
             `);
 
                     // Append each li to the ul
@@ -61,4 +69,9 @@ gitHubForm.addEventListener('submit', (e) => {
 function requestUserRepos(username) {
     // create a variable to hold the `Promise` returned from `fetch`
     return Promise.resolve(fetch(`https://api.github.com/users/${username}/repos`));
+}
+
+function requestRepositorieCommits(repositorio,username){
+    return Promise.resolve(fetch(`https://api.github.com/repos/${username}/${repositorio}/commits`));
+
 }
